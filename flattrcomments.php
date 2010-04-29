@@ -7,7 +7,7 @@
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
-Description: This plugin provides flattr-buttons for comments on your blog if the commentator entered his Flattr-ID
+Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
 Version: 0.6
 Author: Michael Henke
 Author URI: http://www.allesblog.de
@@ -127,6 +127,9 @@ function setup_database() {
         dbDelta($sql);
 
     }
+
+    add_option('flattrcomments_align', "left");
+    add_option('flattrcomments_db_version', FLATTRCOMMENTS_DB_VERSION);
 }
 
 register_activation_hook(__FILE__,'setup_database');
@@ -180,7 +183,4 @@ function add_flattr_button($text) {
 }
 
 add_action( "comment_text", "add_flattr_button");
-
-add_option('flattrcomments_align', "left");
-add_option('flattrcomments_db_version', FLATTRCOMMENTS_DB_VERSION);
 ?>
