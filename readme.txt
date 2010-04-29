@@ -42,4 +42,4 @@ See installation instructions.
 
 == Screenshots ==
 
-No screenshots (yet?)
+1. You see the Flattr button for the post and an additional one for the comment. The comment author can fill in his Flattr ID just below the submit button. (Clumsy position, I know, but I haven't found another way yet.)
