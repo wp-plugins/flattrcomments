@@ -144,7 +144,7 @@ function add_comment_field ($param) {
     
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
-    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '$comment_author' LIMIT 1;";
+    $sql = "SELECT flattrid from $table_name where commentatorid = '$comment_author' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
 
     if ($comment_author_flattr_id != "") {
