@@ -138,16 +138,21 @@ register_activation_hook(__FILE__,'setup_database');
 function add_comment_field ($param) {
     global $wpdb;
 
-    $comment_author = get_comment_author();
-    #echo $comment_author;
+    global $current_user;
+    get_currentuserinfo();
+    $comment_author = $current_user->user_login;
+    
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
     $sql = "SELECT flattrid from $table_name where commentatorid LIKE '$comment_author' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
-    
+
+    if ($comment_author_flattr_id != "") {
+        $value = ' value="'.esc_attr($comment_author_flattr_id).'"';
+    }
 ?>
     <div id="flattrIDfield" style="display: block; clear: both; width: 100%">
-        <p><input type="text" name="flattrID" id="flattrID" value="<?php echo esc_attr($comment_author_flattr_id); ?>" size="22" tabindex="3" />
+        <p><input type="text" name="flattrID" id="flattrID"<?php echo $value;?> size="22" tabindex="3" />
         <label for="flattrID"><small>Your Flattr ID</small></label></p>
     </div>
 <?php
