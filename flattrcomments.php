@@ -13,7 +13,7 @@ Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
 
-DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7');
+DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.1');
 DEFINE("FLATTRCOMMENTS_DB_VERSION",'0.6');
 
 add_action('admin_menu', 'flattrcomments_config_page');

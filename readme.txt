@@ -29,6 +29,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.7.1 =
+* It is highly recommended to upgrade to 0.7.1 from any version
+
 = 0.7 =
 * added language support for flattr 0.7 plugin
 * this version will not work with flattr plugins before version 0.7!
