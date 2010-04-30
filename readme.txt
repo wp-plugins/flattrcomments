@@ -29,6 +29,11 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.7 =
+* added language support for flattr 0.7 plugin
+* this version will not work with flattr plugins before version 0.7!
+* flattr buttons are not displayed in the dashboard because the JavaScript is not dashboard safe and breaks it
+
 = 0.6 =
 * Depends on Flattr plugin version 0.6
 
