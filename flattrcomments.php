@@ -135,9 +135,9 @@ function setup_database() {
 
 register_activation_hook(__FILE__,'setup_database');
 
-function add_comment_field ($param) {
+function add_flattr_comment_field () {
     global $wpdb;
-
+    global $comment_author;
     global $current_user;
     get_currentuserinfo();
     $comment_author = $current_user->user_login;
@@ -157,7 +157,8 @@ function add_comment_field ($param) {
     </div>
 <?php
 }
-add_action( "comment_form", "add_comment_field");
+add_action( "comment_form", "add_flattr_comment_field");
+
 
 function add_flattr_button($text) {
 
@@ -189,5 +190,5 @@ function add_flattr_button($text) {
     return $text;
 }
 
-add_action( "comment_text", "add_flattr_button");
+add_filter( "comment_text", "add_flattr_button");
 ?>
