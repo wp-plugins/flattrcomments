@@ -2,18 +2,18 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.7.1
+ * @version 0.7.2
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
-Version: 0.7.1
+Version: 0.7.2
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
 
-DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.1');
+DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.2');
 DEFINE("FLATTRCOMMENTS_DB_VERSION",'0.6');
 
 add_action('admin_menu', 'flattrcomments_config_page');
@@ -64,6 +64,14 @@ function flattrcomments_options() {
                            
                 </td>
             </tr>
+            <tr valign="top">
+                <th scope="row">Custom Style</th>
+                <td><input type="checkbox" name="flattrcomments_custom_style"<?php if (get_option('flattrcomments_custom_style')) { echo ' checked'; } ?>>
+                    <br />
+                    Check this box if you want to include a custom input field in your style. <a href="#how">See how</a>.
+
+                </td>
+            </tr>
         </table>
 
     <p class="submit">
@@ -72,8 +80,34 @@ function flattrcomments_options() {
     </p>
 
     <input type="hidden" name="action" value="update" />
-    <input type="hidden" name="page_options" value="flattrcomments_align" />
+    <input type="hidden" name="page_options" value="flattrcomments_align,flattrcomments_custom_style" />
     </form>
+        <hr>
+    <a name="how"><h2>Custom Style</h2></a>
+    <p>You have 2 options to include a custom style input field for the comment authors flattr id. No matter how you decide, you need to tick the checkbox for custom style above.</p>
+    <ol>
+        <li><h3>Custom PHP Function Call</h3>
+            Include the following function call in your theme at the desired position.
+            <code>&lt;?php add_flattr_comment_field(); ?&gt;</code>
+            This will generate the same input field at this position that is usually generated below the submit button.
+            You can make a theme plugin ready by modifiing the function call the following way:<br>
+            <code>&lt;?php if(function_exists('add_flattr_comment_field')) { add_flattr_comment_field(); } ?&gt;</code>
+        </li>
+        <li><h3>Custom HTML Input Field</h3>
+            If you are a more experienced theme editor you can generate custom HTML code(<i>e.g. in comments.php</i>).
+            You need to include an input field with the name and ID <code>flattrID</code>.
+            <h4>Example Code</h4>
+            <code>
+                &lt;div id="flattrIDfield" style="display: block; clear: both; width: 100%"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&lt;p&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" name="flattrID" id="flattrID" size="22" tabindex="3" /&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;label for="flattrID"&gt;&lt;small&gt;Your Flattr ID&lt;/small&gt;&lt;/label&gt;<br>
+                &nbsp;&nbsp;&nbsp;&lt;/p&gt;<br>
+                &lt;/div&gt;
+            </code>
+            
+        </li>
+    </ol>
     </div>
         <?php require_once 'donate.php'; ?>
 
@@ -157,8 +191,10 @@ function add_flattr_comment_field () {
     </div>
 <?php
 }
-add_action( "comment_form", "add_flattr_comment_field");
 
+if (!get_option("flattrcomments_custom_style")) {
+    add_action( "comment_form", "add_flattr_comment_field");
+}
 
 function add_flattr_button($text) {
 

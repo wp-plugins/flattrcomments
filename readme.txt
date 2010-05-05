@@ -29,6 +29,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.7.2 =
+* You have 2 options to include a custom style input field for the comment authors flattr id.
+
 = 0.7.1 =
 * It is highly recommended to upgrade to 0.7.1 from any version
 
