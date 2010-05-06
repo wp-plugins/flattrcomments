@@ -32,6 +32,7 @@ It has not been tested agains any of them.
 = 0.7.3 =
 * Hash encryption for comment author names in database
 * Empty FlattrID will not overwrite existing one.
+* FlattrID is stored in session cookie will automagically be reused
 
 = 0.7.2 =
 * You have 2 options to include a custom style input field for the comment authors flattr id.
