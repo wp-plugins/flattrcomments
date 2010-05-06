@@ -144,6 +144,8 @@ function save_flattr_id_for_comment_with_id ($theID) {
         "WHERE commentatorid = '". md5($commentator) ."';";
 
         $results = $wpdb->query( $update );
+
+        setcookie( "flattrID_cookie", $flattrID, time() + 3600, '/' );
     }
 }
 
@@ -188,6 +190,10 @@ function add_flattr_comment_field () {
     $table_name = $prefix."flattr_comments";
     $sql = "SELECT flattrid from $table_name where commentatorid = '". md5($comment_author)."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
+
+    if (isset($_COOKIE['flattrID_cookie'])) {
+        $comment_author_flattr_id = $_COOKIE['flattrID_cookie'] ;
+    }
 
     if ($comment_author_flattr_id != "") {
         $value = ' value="'.esc_attr($comment_author_flattr_id).'"';
