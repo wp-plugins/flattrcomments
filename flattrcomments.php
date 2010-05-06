@@ -2,19 +2,19 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.7.2
+ * @version 0.7.3
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
-Version: 0.7.2
+Version: 0.7.3
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
 
-DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.2');
-DEFINE("FLATTRCOMMENTS_DB_VERSION",'0.6');
+DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.3');
+DEFINE("FLATTRCOMMENTS_DB_VERSION",'074');
 
 add_action('admin_menu', 'flattrcomments_config_page');
 
@@ -112,33 +112,39 @@ function flattrcomments_options() {
         <?php require_once 'donate.php'; ?>
 
 </div>
+<div style="clear:both;">
+<p>Debug: <?php get_option('flattrcomments_db_version'); ?>
+</p>
+</div>
 <?php
 }
 
 function save_flattr_id_for_comment_with_id ($theID) {
-    global $wpdb;
-    $prefix = $wpdb->prefix;
-    $table_name = $prefix."flattr_comments";
-
-    $comment = get_comment($theID);
-    $commentator = $comment->comment_author;
 
     $flattrID = $_POST['flattrID'];
 
-    $insert = "INSERT INTO " . $table_name .
-    " (commentatorid, flattrid) " .
-    "VALUES ('" . $commentator . "','" . $wpdb->escape($flattrID) . "')";
+    if (trim($flattrID) != "") {
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $table_name = $prefix."flattr_comments";
 
-    $results = $wpdb->query( $insert );
+        $comment = get_comment($theID);
+        $commentator = $comment->comment_author;
 
-    // I think it is more efficient to query the database for an update rather
-    // than for an "expensive" select with an additional update just in case
-    $update = "UPDATE $table_name ".
-    "SET flattrid = '". $wpdb->escape($flattrID) ."'".
-    "WHERE commentatorid = '$commentator';";
+        $insert = "INSERT INTO " . $table_name .
+        " (commentatorid, flattrid) " .
+        "VALUES ('" . md5($commentator) . "','" . $wpdb->escape($flattrID) . "')";
 
-    $results = $wpdb->query( $update );
-    
+        $results = $wpdb->query( $insert );
+
+        // I think it is more efficient to query the database for an update rather
+        // than for an "expensive" select with an additional update just in case
+        $update = "UPDATE $table_name ".
+        "SET flattrid = '". $wpdb->escape($flattrID) ."'".
+        "WHERE commentatorid = '". md5($commentator) ."';";
+
+        $results = $wpdb->query( $update );
+    }
 }
 
 # add_action( $tag, $function_to_add, $priority, $accepted_args );
@@ -153,7 +159,7 @@ function setup_database() {
 
     if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
         $sql = "CREATE TABLE " . $table_name . " (
-	  commentatorid VARCHAR(255) NOT NULL,
+	  commentatorid VARCHAR(32) NOT NULL,
 	  flattrid VARCHAR(255) NOT NULL,
 	  UNIQUE KEY commentatorid (commentatorid)
 	);";
@@ -162,6 +168,8 @@ function setup_database() {
         dbDelta($sql);
 
     }
+
+    upgrade_DB($table_name);
 
     add_option('flattrcomments_align', "left");
     add_option('flattrcomments_db_version', FLATTRCOMMENTS_DB_VERSION);
@@ -178,7 +186,7 @@ function add_flattr_comment_field () {
     
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
-    $sql = "SELECT flattrid from $table_name where commentatorid = '$comment_author' LIMIT 1;";
+    $sql = "SELECT flattrid from $table_name where commentatorid = '". md5($comment_author)."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
 
     if ($comment_author_flattr_id != "") {
@@ -186,7 +194,7 @@ function add_flattr_comment_field () {
     }
 ?>
     <div id="flattrIDfield" style="display: block; clear: both; width: 100%">
-        <p><input type="text" name="flattrID" id="flattrID"<?php echo $value;?> size="22" tabindex="3" />
+        <p><input type="text" name="flattrID" id="flattrID" class="formfield"<?php echo $value;?> size="22" tabindex="3" />
         <label for="flattrID"><small>Your Flattr ID</small></label></p>
     </div>
 <?php
@@ -203,7 +211,7 @@ function add_flattr_button($text) {
     $comment_author = get_comment_author();
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
-    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '$comment_author' LIMIT 1;";
+    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '". md5($comment_author)."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
 
     if ($comment_author_flattr_id != "" && !is_admin()) {
@@ -227,4 +235,36 @@ function add_flattr_button($text) {
 }
 
 add_filter( "comment_text", "add_flattr_button");
+
+function upgrade_DB($table_name) {
+    
+    if (get_option('flattrcomments_db_version') < FLATTRCOMMENTS_DB_VERSION ) {
+
+        global $wpdb;
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+
+        $sql = "DROP TABLE '" . $table_name . "'";
+
+        dbDelta($sql);
+
+
+        $sql = "CREATE TABLE " . $table_name . " (
+	  commentatorid VARCHAR(32) NOT NULL,
+	  flattrid VARCHAR(255) NOT NULL,
+	  UNIQUE KEY commentatorid (commentatorid)
+	);";
+
+        dbDelta($sql);
+        update_option('flattrcomments_db_version', FLATTRCOMMENTS_DB_VERSION);
+
+    }
+}
+
+if (!function_exists("md5")) {
+
+    function md5($i) {
+        return $i;
+    }
+}
 ?>
