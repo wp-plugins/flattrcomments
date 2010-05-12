@@ -29,6 +29,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.8 =
+* compatible with official plugin code 0.8
+
 = 0.7.3 =
 * Hash encryption for comment author names in database
 * Empty FlattrID will not overwrite existing one.

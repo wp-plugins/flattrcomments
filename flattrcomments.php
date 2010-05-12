@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.7.3
+ * @version 0.8
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
-Version: 0.7.3
+Version: 0.8
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -272,5 +272,26 @@ if (!function_exists("md5")) {
     function md5($i) {
         return $i;
     }
+}
+
+function flattr_permalink ($userID, $category, $title, $description, $tags, $url, $language) {
+
+    $cleaner = create_function('$expression', "return trim(preg_replace('~\r\n|\r|\n~', ' ', addslashes(\$expression)));");
+
+    $output = "<script type=\"text/javascript\">\n";
+    $output .= "var flattr_wp_ver = '" . Flattr::WP_VERSION  . "';\n";
+    $output .= "var flattr_uid = '" . $cleaner($userID)      . "';\n";
+    $output .= "var flattr_url = '" . $cleaner($url)         . "';\n";
+    $output .= "var flattr_lng = '" . $cleaner($language)    . "';\n";
+    $output .= "var flattr_cat = '" . $cleaner($category)    . "';\n";
+    if($tags) { $output .= "var flattr_tag = '". $cleaner($tags) ."';\n"; }
+    if (get_option('flattr_compact', false)) { $output .= "var flattr_btn = 'compact';\n"; }
+    $output .= "var flattr_tle = '". $cleaner($title) ."';\n";
+    $output .= "var flattr_dsc = '". $cleaner($description) ."';\n";
+    $output .= "</script>\n";
+    $output .= '<script src="' . Flattr::WP_SCRIPT . '" type="text/javascript"></script>';
+
+    return $output;
+
 }
 ?>
