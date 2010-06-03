@@ -29,6 +29,10 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.9.6 =
+* supporting flattr 0.9.6 plugin
+* added option for compact style flattr button in comments
+
 = 0.8 =
 * compatible with official plugin code 0.8
 

@@ -8,7 +8,7 @@
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
-Version: 0.8
+Version: 0.9.6
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -61,7 +61,15 @@ function flattrcomments_options() {
                     </select>
                     <br />
                     Should the comment author's Flattr button be to the left or the right of the comment text?
-                           
+
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">Flattr Button Compact Size</th>
+                <td><input type="checkbox" name="flattrcomments_button_style"<?php if (get_option('flattrcomments_button_style')) { echo ' checked'; } ?>>
+                    <br />
+                    Check this box if you want compact style flattr buttons.
+
                 </td>
             </tr>
             <tr valign="top">
@@ -80,7 +88,7 @@ function flattrcomments_options() {
     </p>
 
     <input type="hidden" name="action" value="update" />
-    <input type="hidden" name="page_options" value="flattrcomments_align,flattrcomments_custom_style" />
+    <input type="hidden" name="page_options" value="flattrcomments_align,flattrcomments_custom_style,flattrcomments_button_style" />
     </form>
         <hr>
     <a name="how"><h2>Custom Style</h2></a>
@@ -276,20 +284,24 @@ if (!function_exists("md5")) {
 
 function flattr_permalink ($userID, $category, $title, $description, $tags, $url, $language) {
 
+    if (!defined('Flattr::API_SCRIPT')) {
+        return "";
+    }
+    
     $cleaner = create_function('$expression', "return trim(preg_replace('~\r\n|\r|\n~', ' ', addslashes(\$expression)));");
 
     $output = "<script type=\"text/javascript\">\n";
-    $output .= "var flattr_wp_ver = '" . Flattr::WP_VERSION  . "';\n";
+    if ( defined('Flattr::VERSION') ) { $output .= "var flattr_wp_ver = '" . Flattr::VERSION  . "';\n"; }
     $output .= "var flattr_uid = '" . $cleaner($userID)      . "';\n";
     $output .= "var flattr_url = '" . $cleaner($url)         . "';\n";
     $output .= "var flattr_lng = '" . $cleaner($language)    . "';\n";
     $output .= "var flattr_cat = '" . $cleaner($category)    . "';\n";
     if($tags) { $output .= "var flattr_tag = '". $cleaner($tags) ."';\n"; }
-    if (get_option('flattr_compact', false)) { $output .= "var flattr_btn = 'compact';\n"; }
+    if (get_option('flattrcomments_button_style', false)) { $output .= "var flattr_btn = 'compact';\n"; } else { $output .= "var flattr_btn = 'large';\n"; }
     $output .= "var flattr_tle = '". $cleaner($title) ."';\n";
     $output .= "var flattr_dsc = '". $cleaner($description) ."';\n";
     $output .= "</script>\n";
-    $output .= '<script src="' . Flattr::WP_SCRIPT . '" type="text/javascript"></script>';
+    $output .= '<script src="' . Flattr::API_SCRIPT . '" type="text/javascript"></script>';
 
     return $output;
 
