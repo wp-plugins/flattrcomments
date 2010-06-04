@@ -306,7 +306,7 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     
     $description = preg_replace($smiley, "", $description);
     
-    $offset = strpos($description, ' ', 512);
+    $offset = strpos($description, ' ', (strlen($description)>512)? 512:strlen($description));
     if ($offset) {
         $description = substr($description, 0, $offset);
     }
