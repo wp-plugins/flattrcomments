@@ -32,6 +32,7 @@ It has not been tested agains any of them.
 = 0.9.6.1 =
 * added CSS class `flattrcomments_button_class` to the buttons `<div>` container
 * added CSS id `flattrcomments_button_id-%N` to the buttons `<div>` container
+* fixed a bug with faulty "My thing" display of comments (workaround)
 
 = 0.9.6 =
 * supporting flattr 0.9.6 plugin
