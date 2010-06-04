@@ -29,7 +29,7 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
-= 0.9.6.1 =
+= 0.9.6.2 =
 * added CSS class `flattrcomments_button_class` to the buttons `<div>` container
 * added CSS id `flattrcomments_button_id-%N` to the buttons `<div>` container
 * fixed a bug with faulty "My thing" display of comments (workaround)
