@@ -244,7 +244,7 @@ function add_flattr_button($text) {
                );
 
         $align = get_option('flattrcomments_align');
-
+        
         $text = "<div>
                  <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
                  flattr_permalink($comment_author_flattr_id, $cat, get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id().")", $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
@@ -300,6 +300,12 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     
     $cleaner = create_function('$expression', "return trim(preg_replace('~\r\n|\r|\n~', ' ', addslashes(\$expression)));");
 
+    $s = 0;
+    $smiley[$s++] = "/[:8;]-?[\)xpXP|\(D\?]/";
+    $smiley[$s++] = "/:\w+:/";
+    
+    $description = preg_replace($smiley, "", $description);
+
     $output = "<script type=\"text/javascript\">\n";
     if ( defined('Flattr::VERSION') ) { $output .= "var flattr_wp_ver = '" . Flattr::VERSION  . "';\n"; }
     $output .= "var flattr_uid = '" . $cleaner($userID)      . "';\n";
@@ -309,7 +315,7 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     if($tags) { $output .= "var flattr_tag = '". $cleaner($tags) ."';\n"; }
     if (get_option('flattrcomments_button_style', false)) { $output .= "var flattr_btn = 'compact';\n"; } else { $output .= "var flattr_btn = 'large';\n"; }
     $output .= "var flattr_tle = '". $cleaner($title) ."';\n";
-    $output .= "var flattr_dsc = '". $cleaner(strip_tags($description)) ."';\n";
+    $output .= "var flattr_dsc = '". $cleaner($description) ."';\n";
     $output .= "</script>\n";
     $output .= '<script src="' . Flattr::API_SCRIPT . '" type="text/javascript"></script>';
 
