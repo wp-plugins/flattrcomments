@@ -11,7 +11,7 @@ This plugin provides flattr-buttons for comments on your blog if the comment aut
 == Description ==
 
 This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr-ID.
-There will be an additional input field right below the comment text box.
+There will be an additional input field right below the comment text box. Alternativly you can input a piece of code in your theme to place the field somewhere more nicely.
 
 == Installation ==
 
