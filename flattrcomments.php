@@ -247,7 +247,7 @@ function add_flattr_button($text) {
 
         $text = "<div>
                  <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
-                 flattr_permalink($comment_author_flattr_id, $cat, get_bloginfo('name'), $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
+                 flattr_permalink($comment_author_flattr_id, $cat, get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id().")", $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
                 "</div>
                  <div><p>$text</p></div>
                  <div style=\"clear:both;\"></div>
