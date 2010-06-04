@@ -29,6 +29,10 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.9.6.1 =
+* added CSS class `flattrcomments_button_class` to the buttons `<div>` container
+* added CSS id `flattrcomments_button_id-%N` to the buttons `<div>` container
+
 = 0.9.6 =
 * supporting flattr 0.9.6 plugin
 * added option for compact style flattr button in comments

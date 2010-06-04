@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.8
+ * @version 0.9.6.1
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
-Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered his Flattr user ID.
-Version: 0.9.6
+Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
+Version: 0.9.6.1
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -218,9 +218,11 @@ if (!get_option("flattrcomments_custom_style")) {
     add_action( "comment_form", "add_flattr_comment_field");
 }
 
+$flattrcomments_button_class = 1;
+
 function add_flattr_button($text) {
 
-    global $wpdb;
+    global $wpdb, $flattrcomments_button_class;
     
     $comment_author = get_comment_author();
     $prefix = $wpdb->prefix;
@@ -236,7 +238,7 @@ function add_flattr_button($text) {
         $align = get_option('flattrcomments_align');
 
         $text = "<div>
-                 <div style=\"float: $align;\">".
+                 <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
                  flattr_permalink($comment_author_flattr_id, $cat, get_bloginfo('name'), $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
                 "</div>
                  <div><p>$text</p></div>
