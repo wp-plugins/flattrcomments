@@ -31,7 +31,9 @@ It has not been tested agains any of them.
 
 = 0.9.6.4 =
 * fixed a bug with faulty "My thing" display of comments (workaround)
-* Auto-submitted comments will be gracefully cut at 512 characters
+* auto-submitted comments will be gracefully cut at 512 characters
+* smileys will be removed from auto-submitted comment text
+* Comments must not contain any ' character, or they will break the Flattr JavaScript!
 
 = 0.9.6.2 =
 * added CSS class `flattrcomments_button_class` to the buttons `<div>` container
