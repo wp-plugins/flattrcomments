@@ -1,7 +1,7 @@
 === Flattr Comments ===
 Contributors: aphex3k
 Donate link: http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin
-Tags: flattr, comments, social, payment, micropayment, micropayments, donate, donation, cake, javascript, paypal, plugin, page
+Tags: flattr, comments, social, payment, micropayment, micropayments, donate, donation, cake, javascript, paypal, plugin, page, crowdfunding
 Requires at least: 2.7
 Tested up to: 2.9.2
 Stable tag: trunk
