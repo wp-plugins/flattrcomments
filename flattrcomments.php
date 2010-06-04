@@ -305,8 +305,11 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     $smiley[$s++] = "/:\w+:/";
     
     $description = preg_replace($smiley, "", $description);
-    $description = substr($description, 0, @strpos($description, ' ', 512));
-
+    
+    $offset = strpos($description, ' ', 512);
+    if ($offset) {
+        $description = substr($description, 0, $offset);
+    }
     $output = "<script type=\"text/javascript\">\n";
     if ( defined('Flattr::VERSION') ) { $output .= "var flattr_wp_ver = '" . Flattr::VERSION  . "';\n"; }
     $output .= "var flattr_uid = '" . $cleaner($userID)      . "';\n";
