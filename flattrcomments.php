@@ -227,13 +227,17 @@ function add_flattr_button($text) {
     $comment_author = get_comment_author();
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
-    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '". md5($comment_author)."' LIMIT 1;";
+    $md5 = md5($comment_author);
+    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '". $md5."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
 
     if ($comment_author_flattr_id != "" && !is_admin()) {
     
         $cat = "text";
         $url = get_comment_link();
+        $url = str_replace("#", '&comment_author_hash='.$md5."#", $url);
+        $url = str_replace("?", '?comment_author_hash='.$md5."&", $url);
+
 
         $align = get_option('flattrcomments_align');
 
