@@ -309,6 +309,7 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     $offset = strpos($description, ' ', (strlen($description)>512)? 512:strlen($description));
     if ($offset) {
         $description = substr($description, 0, $offset);
+        $description .= " [...]";
     }
     $output = "<script type=\"text/javascript\">\n";
     if ( defined('Flattr::VERSION') ) { $output .= "var flattr_wp_ver = '" . Flattr::VERSION  . "';\n"; }

@@ -34,6 +34,7 @@ It has not been tested agains any of them.
 * auto-submitted comments will be gracefully cut at 512 characters
 * smileys will be removed from auto-submitted comment text
 * Comments excerpt must not contain any ' character, or they will break the Flattr JavaScript!
+* words between colon characters will be stripped from auto-submitted excerpt, e.g. :smile:,:cry: or :whatever:
 
 = 0.9.6.2 =
 * added CSS class `flattrcomments_button_class` to the buttons `<div>` container
