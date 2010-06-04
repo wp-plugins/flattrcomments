@@ -230,7 +230,7 @@ function add_flattr_button($text) {
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
     $md5 = md5($comment_author);
-    $sql = "SELECT flattrid from $table_name where commentatorid LIKE '". $md5."' LIMIT 1;";
+    $sql = "SELECT flattrid from $table_name where commentatorid = '". $md5."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
 
     if ($comment_author_flattr_id != "" && !is_admin()) {
@@ -238,7 +238,7 @@ function add_flattr_button($text) {
         $cat = "text";
         $url = http_build_url(get_comment_link(),
                 array(
-                    "query" => "comment_author_hash=$md5"
+                    "query" => "comment_author_hash=$md5&comment_num=".get_comment_id(),
                 ),
                 HTTP_URL_JOIN_QUERY
                );
@@ -309,7 +309,7 @@ function flattr_permalink ($userID, $category, $title, $description, $tags, $url
     if($tags) { $output .= "var flattr_tag = '". $cleaner($tags) ."';\n"; }
     if (get_option('flattrcomments_button_style', false)) { $output .= "var flattr_btn = 'compact';\n"; } else { $output .= "var flattr_btn = 'large';\n"; }
     $output .= "var flattr_tle = '". $cleaner($title) ."';\n";
-    $output .= "var flattr_dsc = '". $cleaner($description) ."';\n";
+    $output .= "var flattr_dsc = '". $cleaner(strip_tags($description)) ."';\n";
     $output .= "</script>\n";
     $output .= '<script src="' . Flattr::API_SCRIPT . '" type="text/javascript"></script>';
 
