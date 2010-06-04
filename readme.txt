@@ -29,8 +29,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
-= 0.9.6.3 =
+= 0.9.6.4 =
 * fixed a bug with faulty "My thing" display of comments (workaround)
+* Auto-submitted comments will be gracefully cut at 512 characters
 
 = 0.9.6.2 =
 * added CSS class `flattrcomments_button_class` to the buttons `<div>` container
