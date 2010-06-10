@@ -29,6 +29,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.9.11 =
+* supporting flattr 0.9.11 plugin
+
 = 0.9.6.4 =
 * fixed a bug with faulty "My thing" display of comments (workaround)
 * auto-submitted comments will be gracefully cut at 512 characters

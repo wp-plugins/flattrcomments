@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.9.6.4
+ * @version 0.9.11
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
-Version: 0.9.6.4
+Version: 0.9.11
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -29,7 +29,7 @@ function flattrcomments_options() {
     <div style="float: left; width: 69%;">
     <h2><!-- <img src="<?php echo get_bloginfo('wpurl') . '/wp-content/plugins/flattrcomments/img/flattr_button.png' ?>" alt="flattr"/>&nbsp; -->Flattr Comments Options</h2>
 <?php 
-    if (!function_exists(the_flattr_permalink)) {
+    if (!function_exists(the_flattr_comments_permalink)) {
         $url = get_bloginfo('wpurl') .'/wp-admin/plugin-install.php?tab=plugin-information&plugin=flattr&TB_iframe=true&width=640&height=840';
 
         echo "<div id=\"message\" class=\"updated fade\">";
@@ -247,7 +247,7 @@ function add_flattr_button($text) {
         
         $text = "<div>
                  <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
-                 flattr_permalink($comment_author_flattr_id, $cat, get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id().")", $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
+                 flattr_comments_permalink($comment_author_flattr_id, $cat, get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id().")", $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
                 "</div>
                  <div><p>$text</p></div>
                  <div style=\"clear:both;\"></div>
@@ -292,7 +292,7 @@ if (!function_exists("md5")) {
     }
 }
 
-function flattr_permalink ($userID, $category, $title, $description, $tags, $url, $language) {
+function flattr_comments_permalink ($userID, $category, $title, $description, $tags, $url, $language) {
 
     if (!defined('Flattr::API_SCRIPT')) {
         return "";
