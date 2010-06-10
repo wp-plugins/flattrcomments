@@ -29,7 +29,7 @@ function flattrcomments_options() {
     <div style="float: left; width: 69%;">
     <h2><!-- <img src="<?php echo get_bloginfo('wpurl') . '/wp-content/plugins/flattrcomments/img/flattr_button.png' ?>" alt="flattr"/>&nbsp; -->Flattr Comments Options</h2>
 <?php 
-    if (!function_exists(the_flattr_comments_permalink)) {
+    if (!function_exists('the_flattr_permalink')) {
         $url = get_bloginfo('wpurl') .'/wp-admin/plugin-install.php?tab=plugin-information&plugin=flattr&TB_iframe=true&width=640&height=840';
 
         echo "<div id=\"message\" class=\"updated fade\">";
