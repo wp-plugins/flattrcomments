@@ -27,6 +27,9 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.9.17.1 =
+* trying to raise compatibility with other comments-plugins
+
 = 0.9.17 =
 * supporting latest available Flattr Javascript API
 * optimized MySQL Query strings

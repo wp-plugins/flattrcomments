@@ -264,7 +264,7 @@ function add_flattr_button($text) {
     return $retval;
 }
 
-add_filter( "comment_text", "add_flattr_button");
+add_filter( "comment_text", "add_flattr_button", -2);
 
 function upgrade_DB($table_name) {
     
