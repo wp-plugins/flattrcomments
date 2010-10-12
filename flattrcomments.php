@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.9.17.3
+ * @version 0.9.17.4
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
-Version: 0.9.17.3
+Version: 0.9.17.4
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -240,9 +240,9 @@ function add_flattr_button($text) {
 
         $excerpt = strip_tags($text);
         $excerpt = preg_replace(array("/\n/", "/\r/"), "", $excerpt);
-        $excerpt = preg_replace(array("/'/", "/\"/", "/:\w+:/"), "", $excerpt);
+        $excerpt = preg_replace(array("/'/", "/\'/", "/\"/", "/:\w+:/"), "", $excerpt);
 
-        $excerpt = substr($excerpt, 0, 512);
+        $excerpt = urlencode(substr($excerpt, 0, 512));
 
         $title = strip_tags(get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id());
         $title = str_replace("\"", "", $title);

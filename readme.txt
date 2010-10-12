@@ -27,6 +27,10 @@ It has not been tested agains any of them.
 
 == Changelog ==
 
+= 0.9.17.4 =
+* modified priority
+* revertet MySQL statement
+
 = 0.9.17.1 =
 * trying to raise compatibility with other comments-plugins
 
