@@ -241,6 +241,7 @@ function add_flattr_button($text) {
         $excerpt = strip_tags($text);
         $excerpt = preg_replace(array("/\n/", "/\r/"), "", $excerpt);
         $excerpt = preg_replace(array("/'/", "/\'/", "/\"/", "/:\w+:/"), "", $excerpt);
+        $excerpt = str_replace("...", "&hellip;", $excerpt);
 
         $excerpt = urlencode(substr($excerpt, 0, 512));
 
