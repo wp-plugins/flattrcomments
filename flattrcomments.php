@@ -239,7 +239,7 @@ function add_flattr_button($text) {
         $button = get_option('flattrcomments_button_style')?"button:compact":"";
 
         $excerpt = strip_tags($text);
-        $excerpt = preg_replace(array("/\n/", "/\r/", "/'/", "/\"/", "/:\w+:/"), "", $excerpt);
+        $excerpt = preg_replace(array("/\n/", "/\r/", "/'/", "/\"/", "/:\w+:/", "&amp;", "&"), "", $excerpt);
 
         $excerpt = substr($excerpt, 0, 512);
 
