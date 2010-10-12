@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.9.17.1
+ * @version 0.9.17.2
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
-Version: 0.9.17.1
+Version: 0.9.17.2
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
@@ -131,16 +131,16 @@ function save_flattr_id_for_comment_with_id ($theID) {
 
         $insert = "INSERT INTO " . $table_name .
         " (commentatorid, flattrid) " .
-        "VALUES ('" . md5($commentator) . "','" . $wpdb->escape($flattrID) . "') ON DUPLICATE KEY UPDATE 'flattrid' = '" . $wpdb->escape($flattrID) . "'";
+        "VALUES ('" . md5($commentator) . "','" . $wpdb->escape($flattrID) . "');";
 
         $results = $wpdb->query( $insert );
 
         // I think it is more efficient to query the database for an update rather
         // than for an "expensive" select with an additional update just in case
-        #$update = "UPDATE $table_name ".
-        #"SET flattrid = '". $wpdb->escape($flattrID) ."'".
-        #"WHERE commentatorid = '". md5($commentator) ."';";
-        #$results = $wpdb->query( $update );
+        $update = "UPDATE $table_name ".
+        "SET flattrid = '". $wpdb->escape($flattrID) ."'".
+        "WHERE commentatorid = '". md5($commentator) ."';";
+        $results = $wpdb->query( $update );
 
         setcookie( "flattrID_cookie", $flattrID, time() + 3600, '/' );
     }
@@ -239,7 +239,7 @@ function add_flattr_button($text) {
         $button = get_option('flattrcomments_button_style')?"button:compact":"";
 
         $excerpt = strip_tags($text);
-        $excerpt = preg_replace(array("/\n/", "/\r/", "/'/" ,"/\"/", "/:\w+:/"), "", $excerpt);
+        $excerpt = preg_replace(array("/\n/", "/\r/", "/'/", "/\"/", "/:\w+:/"), "", $excerpt);
 
         $excerpt = substr($excerpt, 0, 512);
 
@@ -249,11 +249,11 @@ function add_flattr_button($text) {
         $retval = "<div>
                  <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
                 "<a class=\"FlattrButton\"  style=\"display:none;\" ".
-                    "title=\"".$title.")\"".
-                    "href=\"$url\"".
-                    "rev=\"flattr;uid:$comment_author_flattr_id;tags:blog,wordpress,comment,plugin,flattr;category:$cat;$button\"".
+                    "title=\"".$title.")\" ".
+                    "href=\"$url\" ".
+                    "rev=\"flattr;uid:$comment_author_flattr_id;tags:blog,wordpress,comment,plugin,flattr;category:$cat;$button\" ".
                     "lang=\"".get_option('flattr_lng')."\">".
-                "".$excerpt."".
+                $excerpt.
                 "</a>".
                 "</div>
                  <div><p>$text</p></div>
@@ -264,7 +264,7 @@ function add_flattr_button($text) {
     return $retval;
 }
 
-add_filter( "comment_text", "add_flattr_button", -2);
+add_filter( "comment_text", "add_flattr_button",-1);
 
 function upgrade_DB($table_name) {
     
