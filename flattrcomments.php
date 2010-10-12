@@ -2,18 +2,18 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.9.11
+ * @version 0.9.17
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
-Version: 0.9.11
+Version: 0.9.17
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
 
-DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.7.3');
+DEFINE("FLATTRCOMMENTS_PLUGIN_VERSION",'0.9.17');
 DEFINE("FLATTRCOMMENTS_DB_VERSION",'074');
 
 add_action('admin_menu', 'flattrcomments_config_page');
@@ -28,16 +28,6 @@ function flattrcomments_options() {
 <div class="wrap flattrcomments-wrap" style="width:auto">
     <div style="float: left; width: 69%;">
     <h2><!-- <img src="<?php echo get_bloginfo('wpurl') . '/wp-content/plugins/flattrcomments/img/flattr_button.png' ?>" alt="flattr"/>&nbsp; -->Flattr Comments Options</h2>
-<?php 
-    if (!function_exists('the_flattr_permalink')) {
-        $url = get_bloginfo('wpurl') .'/wp-admin/plugin-install.php?tab=plugin-information&plugin=flattr&TB_iframe=true&width=640&height=840';
-
-        echo "<div id=\"message\" class=\"updated fade\">";
-        echo "<p>Flattr plugin not actived!</p>";
-        echo "</div>";
-        echo "<p>You need the official <a href=\"$url\" title=\"Flattr plugin\" class=\"thickbox onclick\">Flattr.com</a> plugin <strong>installed and activated</strong> for this to work!</p>";
-
-    } ?>
 
 <?php
     global $wpdb;
@@ -121,8 +111,8 @@ function flattrcomments_options() {
 
 </div>
 <div style="clear:both;">
-<p>Debug: <?php get_option('flattrcomments_db_version'); ?>
-</p>
+<!-- <p>Debug: <?php get_option('flattrcomments_db_version'); ?>
+</p>-->
 </div>
 <?php
 }
@@ -141,17 +131,16 @@ function save_flattr_id_for_comment_with_id ($theID) {
 
         $insert = "INSERT INTO " . $table_name .
         " (commentatorid, flattrid) " .
-        "VALUES ('" . md5($commentator) . "','" . $wpdb->escape($flattrID) . "')";
+        "VALUES ('" . md5($commentator) . "','" . $wpdb->escape($flattrID) . "') ON DUPLICATE KEY UPDATE 'flattrid' = '" . $wpdb->escape($flattrID) . "'";
 
         $results = $wpdb->query( $insert );
 
         // I think it is more efficient to query the database for an update rather
         // than for an "expensive" select with an additional update just in case
-        $update = "UPDATE $table_name ".
-        "SET flattrid = '". $wpdb->escape($flattrID) ."'".
-        "WHERE commentatorid = '". md5($commentator) ."';";
-
-        $results = $wpdb->query( $update );
+        #$update = "UPDATE $table_name ".
+        #"SET flattrid = '". $wpdb->escape($flattrID) ."'".
+        #"WHERE commentatorid = '". md5($commentator) ."';";
+        #$results = $wpdb->query( $update );
 
         setcookie( "flattrID_cookie", $flattrID, time() + 3600, '/' );
     }
@@ -230,8 +219,10 @@ function add_flattr_button($text) {
     $prefix = $wpdb->prefix;
     $table_name = $prefix."flattr_comments";
     $md5 = md5($comment_author);
-    $sql = "SELECT flattrid from $table_name where commentatorid = '". $md5."' LIMIT 1;";
+    $sql = "SELECT flattrid FROM $table_name WHERE commentatorid = '". $md5."' LIMIT 1;";
     $comment_author_flattr_id = $wpdb->get_var($sql);
+
+    $retval = $text;
 
     if ($comment_author_flattr_id != "" && !is_admin()) {
     
@@ -244,18 +235,33 @@ function add_flattr_button($text) {
                );
 
         $align = get_option('flattrcomments_align');
+
+        $button = get_option('flattrcomments_button_style')?"button:compact":"";
+
+        $excerpt = strip_tags($text);
+        $excerpt = preg_replace(array("/\n/", "/\r/", "'" ,"/\"/", "/:\w+:/"), "", $excerpt);
+
+        $excerpt = substr($excerpt, 0, 512);
+
+        $title = strip_tags(get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id());
+        $title = str_replace("\"", "", $title);
         
-        $text = "<div>
+        $retval = "<div>
                  <div class=\"flattrcomments_button_class\" id=\"flattrcomments_button_id-".$flattrcomments_button_class++."\" style=\"float: $align;\">".
-                 flattr_comments_permalink($comment_author_flattr_id, $cat, get_bloginfo('name')." &laquo; ".$comment_author. " (#".get_comment_id().")", $text, 'blog,wordpress,comment,plugin,flattr', $url, get_option('flattr_lng')).
+                "<a class=\"FlattrButton\"  style=\"display:none;\" ".
+                    "title=\"".$title.")\"".
+                    "href=\"$url\"".
+                    "rev=\"flattr;uid:$comment_author_flattr_id;tags:blog,wordpress,comment,plugin,flattr;category:$cat;$button\"".
+                    "lang=\"".get_option('flattr_lng')."\">".
+                "".$excerpt."".
+                "</a>".
                 "</div>
                  <div><p>$text</p></div>
                  <div style=\"clear:both;\"></div>
                  </div>";
-
     }
 
-    return $text;
+    return $retval;
 }
 
 add_filter( "comment_text", "add_flattr_button");
@@ -292,39 +298,6 @@ if (!function_exists("md5")) {
     }
 }
 
-function flattr_comments_permalink ($userID, $category, $title, $description, $tags, $url, $language) {
+wp_enqueue_script('flattrscript', "https://api.flattr.com/js/0.5.0/load.js?mode=auto");
 
-    if (!defined('Flattr::API_SCRIPT')) {
-        return "";
-    }
-    
-    $cleaner = create_function('$expression', "return trim(preg_replace('~\r\n|\r|\n~', ' ', addslashes(\$expression)));");
-
-    $s = 0;
-    $smiley[$s++] = "/[:8;]-?[\)xpXP|\(D\?]/";
-    $smiley[$s++] = "/:\w+:/";
-    
-    $description = preg_replace($smiley, "", $description);
-    
-    $offset = strpos($description, ' ', (strlen($description)>512)? 512:strlen($description));
-    if ($offset) {
-        $description = substr($description, 0, $offset);
-        $description .= " [...]";
-    }
-    $output = "<script type=\"text/javascript\">\n";
-    if ( defined('Flattr::VERSION') ) { $output .= "var flattr_wp_ver = '" . Flattr::VERSION  . "';\n"; }
-    $output .= "var flattr_uid = '" . $cleaner($userID)      . "';\n";
-    $output .= "var flattr_url = '" . $cleaner($url)         . "';\n";
-    $output .= "var flattr_lng = '" . $cleaner($language)    . "';\n";
-    $output .= "var flattr_cat = '" . $cleaner($category)    . "';\n";
-    if($tags) { $output .= "var flattr_tag = '". $cleaner($tags) ."';\n"; }
-    if (get_option('flattrcomments_button_style', false)) { $output .= "var flattr_btn = 'compact';\n"; } else { $output .= "var flattr_btn = 'large';\n"; }
-    $output .= "var flattr_tle = '". $cleaner($title) ."';\n";
-    $output .= "var flattr_dsc = '". $cleaner($description) ."';\n";
-    $output .= "</script>\n";
-    $output .= '<script src="' . Flattr::API_SCRIPT . '" type="text/javascript"></script>';
-
-    return $output;
-
-}
 ?>

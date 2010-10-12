@@ -15,19 +15,22 @@ There will be an additional input field right below the comment text box. Altern
 
 == Installation ==
 
-You need to have the official Flattr plugin allready installed and activated. Then:
-
 1. Download the plugin archive
 1. uncompress archive
 1. Upload archive to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
-There are few options (yet one!) to the plugin via the dashboard.
+There are few options to the plugin via the dashboard.
 
 This plugin is very likely to not work with other comment plugins.
 It has not been tested agains any of them.
 
 == Changelog ==
+
+= 0.9.17 =
+* supporting latest available Flattr Javascript API
+* optimized MySQL Query strings
+* No longer dependant to the official Flattr plugin
 
 = 0.9.11 =
 * supporting flattr 0.9.11 plugin
