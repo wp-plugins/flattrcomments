@@ -2,13 +2,13 @@
 /**
  * @package FlattrComments
  * @author Michael Henke
- * @version 0.9.17.4
+ * @version 0.9.17.5
  */
 /*
 Plugin Name: FlattrComments
 Plugin URI: http://wordpress.org/extend/plugins/flattrcomments/
 Description: This plugin provides flattr-buttons for comments on your blog if the comment author entered a Flattr user ID. You can flattr the plugin effort <a href="http://flattr.com/thing/542/FlattrComments-Wordpress-Plugin" target="_blank">here</a>.
-Version: 0.9.17.4
+Version: 0.9.17.5
 Author: Michael Henke
 Author URI: http://www.allesblog.de
 */
